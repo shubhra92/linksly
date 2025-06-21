@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link, Analytics, CreateLinkRequest } from '../types';
+import { Link, Analytics, CreateLinkRequest, GetLinksResponse } from '../types';
 
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:3001/api';
 
 export function useApi() {
   const [loading, setLoading] = useState(false);
@@ -42,7 +42,7 @@ export function useApi() {
     });
   };
 
-  const getLinks = async (page = 1, limit = 10) => {
+  const getLinks = async (page = 1, limit = 10): Promise<GetLinksResponse> => {
     return apiCall(`/links?page=${page}&limit=${limit}`);
   };
 

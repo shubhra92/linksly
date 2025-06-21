@@ -55,3 +55,9 @@ export interface CreateLinkRequest {
   description?: string;
   expiresAt?: string;
 }
+
+export interface GetLinksResponse {
+  links: Link[];
+  totalPages: number;
+  currentPage: number;
+}
