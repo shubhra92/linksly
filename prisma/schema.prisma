@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Link {
+  id          String   @id @default(cuid())
+  originalUrl String
+  shortCode   String   @unique
+  customAlias String?  @unique
+  title       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  expiresAt   DateTime?
+  isActive    Boolean  @default(true)
+  
+  // Analytics
+  clicks      Click[]
+  totalClicks Int      @default(0)
+  
+  @@map("links")
+}
+
+model Click {
+  id        String   @id @default(cuid())
+  linkId    String
+  ip        String?
+  userAgent String?
+  referer   String?
+  country   String?
+  city      String?
+  device    String?
+  browser   String?
+  os        String?
+  createdAt DateTime @default(now())
+  
+  link Link @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  
+  @@map("clicks")
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  lastUsed  DateTime?
+  
+  @@map("api_keys")
+}
